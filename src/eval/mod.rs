@@ -135,9 +135,6 @@ pub struct Runtime {
     pub blockhash_state: BlockhashState,
     /// Block header.
     pub block: HeaderParams,
-
-    /// Hooks for context history.
-    pub context_history_hooks: Vec<Box<Fn(&Context)>>,
 }
 
 impl Runtime {
@@ -149,9 +146,7 @@ impl Runtime {
     /// Create the runtime with the given blockhash state.
     pub fn with_states(block: HeaderParams, blockhash_state: BlockhashState) -> Self {
         Runtime {
-            block, blockhash_state,
-
-            context_history_hooks: Vec::new(),
+            block, blockhash_state
         }
     }
 }

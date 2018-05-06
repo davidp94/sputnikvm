@@ -230,6 +230,7 @@ pub type SeqTransactionVM<P> = TransactionVM<SeqMemory<P>, P>;
 pub struct ContextVM<M, P: Patch> {
     runtime: Runtime,
     machines: Vec<Machine<M, P>>,
+    history: Vec<Context>,
     fresh_account_state: AccountState<P::Account>,
 }
 
@@ -241,6 +242,7 @@ impl<M: Memory + Default, P: Patch> ContextVM<M, P> {
         ContextVM {
             machines,
             runtime: Runtime::new(block),
+            history: Vec::new(),
             fresh_account_state: AccountState::default(),
         }
     }
@@ -253,6 +255,7 @@ impl<M: Memory + Default, P: Patch> ContextVM<M, P> {
         ContextVM {
             machines,
             runtime: Runtime::with_states(block, blockhash_state),
+            history: Vec::new(),
             fresh_account_state: account_state,
         }
     }
@@ -276,6 +279,11 @@ impl<M: Memory + Default, P: Patch> ContextVM<M, P> {
                           vm.runtime.blockhash_state.clone())
     }
 
+    /// Returns the call create history. Only used in testing.
+    pub fn history(&self) -> &[Context] {
+        self.history.as_slice()
+    }
+
     /// Returns the current state of the VM.
     pub fn current_state(&self) -> &State<M, P> {
         self.current_machine().state()
@@ -284,11 +292,6 @@ impl<M: Memory + Default, P: Patch> ContextVM<M, P> {
     /// Returns the current runtime machine.
     pub fn current_machine(&self) -> &Machine<M, P> {
         self.machines.last().unwrap()
-    }
-
-    /// Add a new context history hook.
-    pub fn add_context_history_hook<F: 'static + Fn(&Context)>(&mut self, f: F) {
-        self.runtime.context_history_hooks.push(Box::new(f));
     }
 }
 
@@ -364,22 +367,16 @@ impl<M: Memory + Default, P: Patch> VM for ContextVM<M, P> {
                 Ok(())
             },
             MachineStatus::InvokeCall(context, _) => {
-                for hook in &self.runtime.context_history_hooks {
-                    hook(&context)
-                }
-
-                let mut sub = self.machines.last().unwrap().derive(context);
+                let mut sub = self.machines.last().unwrap().derive(context.clone());
                 sub.invoke_call()?;
+                self.history.push(context);
                 self.machines.push(sub);
                 Ok(())
             },
             MachineStatus::InvokeCreate(context) => {
-               for hook in &self.runtime.context_history_hooks {
-                    hook(&context)
-                }
-
-                let mut sub = self.machines.last().unwrap().derive(context);
+                let mut sub = self.machines.last().unwrap().derive(context.clone());
                 sub.invoke_create()?;
+                self.history.push(context);
                 self.machines.push(sub);
                 Ok(())
             },
