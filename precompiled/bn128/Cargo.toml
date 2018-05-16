@@ -8,5 +8,5 @@ repository = "https://github.com/ethereumproject/sputnikvm"
 
 [dependencies]
 sputnikvm = { version = "0.10", path = "../.." }
-etcommon-bigint = { version = "0.2", default-features = false }
-bn-plus = { version = "0.4" }
+etcommon-bigint = { git = "https://github.com/peterjgilbert/etcommon-rs", branch = "feature/sgx", default-features = false }
+bn = { git = "https://github.com/peterjgilbert/bn", branch = "feature/no_rand" }

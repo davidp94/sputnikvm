@@ -8,8 +8,8 @@ repository = "https://github.com/ethereumproject/sputnikvm"
 
 [dependencies]
 sputnikvm = { version = "0.10", path = "../.." }
-etcommon-bigint = { version = "0.2", default-features = false }
-num-bigint = "0.1"
+etcommon-bigint = { git = "https://github.com/peterjgilbert/etcommon-rs", branch = "feature/sgx", default-features = false }
+num-bigint = { version = "0.1", default-features = false }
 
 [dev-dependencies]
 etcommon-hexutil = "0.2"
