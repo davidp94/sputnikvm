@@ -446,7 +446,7 @@ impl<M: Memory + Default, P: Patch> Machine<M, P> {
         let instruction = PCMut::<P>::new(&self.state.context.code,
                                           &self.state.valids, &mut self.state.position)
             .read().unwrap();
-        println!("Instruction: {:?}", instruction);
+        info!("Instruction: {:?}", instruction);
         let result = run_opcode::<M, P>((instruction, position),
                                         &mut self.state, runtime, gas_stipend, after_gas);
 
@@ -475,7 +475,7 @@ impl<M: Memory + Default, P: Patch> Machine<M, P> {
                 Ok(())
             },
             Some(Control::Revert) => {
-                println!("Control::Revert");
+                info!("Control::Revert");
                 reset_error_revert!(self);
                 Ok(())
             },

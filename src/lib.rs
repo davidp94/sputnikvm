@@ -115,6 +115,9 @@ extern crate block;
 #[cfg(test)]
 extern crate hexutil;
 
+#[macro_use]
+extern crate log;
+
 mod util;
 mod memory;
 mod stack;

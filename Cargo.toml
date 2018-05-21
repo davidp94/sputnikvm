@@ -23,6 +23,8 @@ etcommon-block = { git = "https://github.com/peterjgilbert/etcommon-rs", branch 
 secp256k1-plus = { git = "https://github.com/peterjgilbert/rust-secp256k1", branch = "rand_optional", optional = true }
 libsecp256k1 = { version = "0.1", optional = true }
 
+log = "0.4"
+
 [dev-dependencies]
 etcommon-hexutil = "0.2"
 
