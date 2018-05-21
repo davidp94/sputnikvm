@@ -475,7 +475,7 @@ impl<M: Memory + Default, P: Patch> Machine<M, P> {
                 Ok(())
             },
             Some(Control::Revert) => {
-                panic!("Control::Revert!");
+                panic!("Control::Revert {:?}", instruction);
                 //reset_error_revert!(self);
                 //Ok(())
             },
