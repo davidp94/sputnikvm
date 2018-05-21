@@ -474,6 +474,7 @@ impl<M: Memory + Default, P: Patch> Machine<M, P> {
                 Ok(())
             },
             Some(Control::Revert) => {
+                println!("Control::Revert");
                 reset_error_revert!(self);
                 Ok(())
             },
