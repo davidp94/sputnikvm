@@ -244,7 +244,8 @@ impl<M: Memory + Default, P: Patch> Machine<M, P> {
             MachineStatus::ExitedOk => {
                 self.state.account_state = sub.state.account_state;
                 self.state.removed = sub.state.removed;
-                self.state.ret = Rc::new(Vec::new());
+                //self.state.ret = Rc::new(Vec::new());
+                self.state.ret = sub.state.out.clone();
             },
             MachineStatus::ExitedErr(_) => {
                 self.state.stack.pop().unwrap();
